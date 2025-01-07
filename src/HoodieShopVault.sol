@@ -12,7 +12,7 @@ contract HoodieShopVault is ERC2771Context, ReentrancyGuard {
 
     IERC20 public immutable usdc; // Base USDC token address 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
     address public admin;
-    AggregatorV3Interface internal nativeOracle;
+    AggregatorV3Interface internal nativeOracle; // ETHUSD feed on base 0x71041dddad3595F9CEd3DcCFBe3D1F4b0a16Bb70
     uint32 constant PRICE_FACTOR = 10_00_000;
 
     // Mappings for eligibility
