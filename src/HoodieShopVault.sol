@@ -12,7 +12,7 @@ contract HoodieShopVault is ERC2771Context, ReentrancyGuard {
 
     IERC20 public immutable usdc; // Base USDC token address 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
     address public admin;
-    AggregatorV3Interface internal tokenOracle;
+    AggregatorV3Interface internal nativeOracle;
     uint32 constant PRICE_FACTOR = 10_00_000;
 
     // Mappings for eligibility
@@ -38,10 +38,10 @@ contract HoodieShopVault is ERC2771Context, ReentrancyGuard {
     }
 
     // Constructor
-    constructor(address _token, address _admin, address _trustedForwarder, address _tokenOracle) ERC2771Context(_trustedForwarder) {
+    constructor(address _token, address _admin, address _trustedForwarder, address _nativeOracle) ERC2771Context(_trustedForwarder) {
         usdc = IERC20(_token);
         admin = _admin;
-        tokenOracle = AggregatorV3Interface(_tokenOracle);
+        nativeOracle = AggregatorV3Interface(_nativeOracle);
     }
 
     // Receive Ether
@@ -59,7 +59,7 @@ contract HoodieShopVault is ERC2771Context, ReentrancyGuard {
         if (msg.value > 0) {
             uint256 _ethSent = msg.value;
             uint256 exchangeRate = uint256(getThePrice());
-            uint8 oracleDecimals = tokenOracle.decimals();
+            uint8 oracleDecimals = nativeOracle.decimals();
             uint256 approxUSD = (_ethSent/1e18)*(exchangeRate/(10**oracleDecimals)) * PRICE_FACTOR;
             // Require ETH value to be equivalent to or above 30 USD
             require(approxUSD > 30e6, "Pay more ETH");
@@ -107,7 +107,7 @@ contract HoodieShopVault is ERC2771Context, ReentrancyGuard {
             ,
             uint256 updatedAt,
             uint80 answeredInRound
-        ) = tokenOracle.latestRoundData();
+        ) = nativeOracle.latestRoundData();
 
         // By default 2 days old price is considered stale BUT it may vary per price feed
         // comapred to stable coin feeds this may have different heartbeat
