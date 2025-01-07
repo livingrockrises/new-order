@@ -1,3 +1,7 @@
 forge-std/=lib/forge-std/src/
 solmate/=lib/solmate/src/
 ds-test/=lib/forge-std/lib/ds-test/src/
+@chainlink/contracts/=node_modules/@chainlink/contracts/
+@openzeppelin/=node_modules/@openzeppelin/
+solady/=node_modules/solady/
+
